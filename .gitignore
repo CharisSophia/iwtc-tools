@@ -13,6 +13,8 @@ venv/
 *.nbconvert.*
 
 # --- Data & assets ---
+data/srd
+data/srd_raw
 assets/maps/
 assets/tokens/
 assets/icons/
