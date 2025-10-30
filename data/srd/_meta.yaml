@@ -1,0 +1,31 @@
+source_repos:
+- name: 5e-database
+  url: https://github.com/5e-bits/5e-database.git
+  sparse_paths:
+  - src/2014
+  - src/2024
+  commit: 6563534a017ae7c1b64a3d2cda35d4c79c8bfdb5
+imported_at: '2025-10-29T23:27:14'
+license_upstream: MIT (repo); SRD content under OGL v1.0a
+license_files:
+- LICENSE_OGL.html
+- LICENSE_5e-database.md
+resources:
+  '2014':
+  - key: equipment
+    file: 5e-SRD-Equipment.json
+    alternates:
+    - 5e-SRD-Equipment-Categories.json
+  - key: monsters
+    file: 5e-SRD-Monsters.json
+    alternates: []
+  - key: spells
+    file: 5e-SRD-Spells.json
+    alternates: []
+  '2024':
+  - key: equipment
+    file: 5e-SRD-Equipment.json
+    alternates:
+    - 5e-SRD-Equipment-Categories.json
+schema_version: statblock.v1
+notes: SRD JSON copied via sparse-checkout; homebrew remains YAML and editable.

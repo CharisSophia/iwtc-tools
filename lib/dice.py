@@ -1,169 +1,137 @@
-"""
-IWTC Dice Engine
-- Supports NdM +/- K/D operators:
-    3d6+2
-    4d6kh3   (keep highest 3)
-    4d6kl3   (keep lowest 3)
-    4d6dh1   (drop highest 1)
-    4d6dl1   (drop lowest 1)
-- Advantage/Disadvantage helpers for d20 checks:
-    roll_adv(5)  -> 1d20 with +5, take higher
-    roll_dis(-1) -> 1d20 with -1, take lower
-- Returns both a machine-friendly dict and a pretty string.
-"""
-
+# lib/dice.py
 from __future__ import annotations
-import random, re
+import random
+import re
 from dataclasses import dataclass
-from typing import List, Literal, Tuple
+from typing import List, Tuple
 
-# ---------- parsing ----------
-
-DICE_RE = re.compile(
+_DICE_RE = re.compile(
     r"""
-    ^\s*
-    (?P<n>\d*)d(?P<faces>\d+)            # e.g., 3d6  or d20
+    (?P<sign>[-+]?)                      # optional leading sign
     (?:
-        (?P<op>kh|kl|dh|dl) (?P<count>\d+)   # keep/drop highest/lowest
-    )?
-    (?P<mod>[+-]\d+)?                    # +2 or -1
-    \s*$
+        (?:
+            (?P<count>\d+)?              # optional count (e.g., 4 in 4d6)
+            d
+            (?P<sides>\d+)               # sides (e.g., 6 in d6)
+            (?P<keep>(?:k[hl]\d+)?)      # optional keep-high/keep-low (e.g., kh3, kl2)
+        )
+        |
+        (?P<const>\d+)                   # or a plain constant
+    )
     """,
     re.VERBOSE | re.IGNORECASE,
 )
 
-Selector = Literal["kh", "kl", "dh", "dl"]
-
 @dataclass
-class RollResult:
-    expr: str                 # original expression (normalized)
-    n: int                    # number of dice
-    faces: int                # die faces
-    rolls: List[int]          # raw rolls
-    selected: List[int]       # kept dice after K/D rules
-    dropped: List[int]        # dropped dice after K/D rules
-    modifier: int             # +/- modifier
-    subtotal: int             # sum(selected)
-    total: int                # subtotal + modifier
-    detail: str               # human-friendly detail string
+class Result:
+    total: int
+    detail: str
 
-def _apply_selector(rolls: List[int], sel: Selector | None, k: int | None) -> Tuple[List[int], List[int]]:
-    if not sel or not k:
+def _roll_one_die(sides: int) -> int:
+    if sides <= 0:
+        raise ValueError(f"Bad dice expression: die with {sides} sides")
+    return random.randint(1, sides)
+
+def _apply_keep(rolls: List[int], keep_spec: str) -> Tuple[List[int], List[int]]:
+    """Return (kept, dropped) according to keep spec like 'kh3' or 'kl2'."""
+    if not keep_spec:
         return rolls[:], []
-    indexed = list(enumerate(rolls))
-    # Sort with indices to get deterministic drops when equal
-    if sel in ("kh", "dh"):
-        indexed.sort(key=lambda t: (t[1], t[0]), reverse=True)  # highest first
-    else:
-        indexed.sort(key=lambda t: (t[1], t[0]))                # lowest first
-    if sel in ("kh", "kl"):
-        keep = indexed[:k]
-        drop = indexed[k:]
-    else:  # dh/dl
-        drop = indexed[:k]
-        keep = indexed[k:]
-    # Restore original ordering inside each list
-    keep.sort(key=lambda t: t[0])
-    drop.sort(key=lambda t: t[0])
-    return [v for _, v in keep], [v for _, v in drop]
-
-def parse(expr: str):
-    m = DICE_RE.match(expr.strip())
+    keep_spec = keep_spec.lower()
+    m = re.match(r"k([hl])(\d+)", keep_spec)
     if not m:
-        raise ValueError(f"Bad dice expression: {expr!r}")
-    n = int(m.group("n") or 1)
-    faces = int(m.group("faces"))
-    sel = m.group("op")
-    k = int(m.group("count")) if m.group("count") else None
-    mod = int(m.group("mod") or 0)
-    if n <= 0 or faces <= 0:
-        raise ValueError("Dice count and faces must be positive.")
-    if k is not None and (k < 0 or k > n):
-        raise ValueError("Keep/Drop count must be between 0 and n.")
-    return n, faces, sel, k, mod
-
-# ---------- rolling ----------
-
-def roll(expr: str, rng: random.Random | None = None) -> RollResult:
-    """
-    Roll an expression like '4d6kh3+2' or 'd20-1'.
-    """
-    n, faces, sel, k, mod = parse(expr)
-    r = rng or random
-    rolls = [r.randint(1, faces) for _ in range(n)]
-    selected, dropped = _apply_selector(rolls, sel, k)
-    subtotal = sum(selected) if selected else sum(rolls)
-    total = subtotal + mod
-
-    # Build a readable detail string
-    parts = []
-    if sel and k is not None:
-        parts.append(f"{n}d{faces}{sel}{k}")
+        return rolls[:], []
+    which, n_str = m.groups()
+    n = int(n_str)
+    if n <= 0:
+        return [], rolls[:]
+    indexed = list(enumerate(rolls))
+    if which == "h":
+        indexed.sort(key=lambda t: t[1], reverse=True)
     else:
-        parts.append(f"{n}d{faces}")
-    if mod:
-        parts.append(f"{mod:+d}")
-    norm = "".join(parts)
+        indexed.sort(key=lambda t: t[1])
+    kept_idx = set(i for i, _ in indexed[:n])
+    kept, dropped = [], []
+    for i, val in enumerate(rolls):
+        (kept if i in kept_idx else dropped).append(val)
+    return kept, dropped
 
-    # format like: [4, 2, 6, 5] -> keep [6,5,4], drop [2]  +2  = 17
-    rolls_str = f"{rolls}"
-    kd_str = ""
-    if dropped:
-        kd_str = f" -> keep {selected} | drop {dropped}"
-    elif selected and selected != rolls:
-        kd_str = f" -> keep {selected}"
-    mod_str = f" {mod:+d}" if mod else ""
-    detail = f"{norm}: {rolls_str}{kd_str}{mod_str} = {total}"
+def _parse_terms(expr: str):
+    expr = expr.strip().replace(" ", "")
+    if not expr:
+        raise ValueError("Bad dice expression: empty")
+    terms = []
+    pos = 0
+    while pos < len(expr):
+        m = _DICE_RE.match(expr, pos)
+        if not m:
+            # show a helpful slice near the error
+            raise ValueError(f"Bad dice expression: '{expr[pos:pos+12]}'")
+        sign = -1 if m.group("sign") == "-" else 1
+        if m.group("const"):
+            const = int(m.group("const"))
+            terms.append(("const", sign, const, None, None))
+        else:
+            count = int(m.group("count")) if m.group("count") else 1
+            sides = int(m.group("sides"))
+            keep = m.group("keep") or ""
+            terms.append(("dice", sign, count, sides, keep))
+        pos = m.end()
+    return terms
 
-    return RollResult(
-        expr=norm,
-        n=n,
-        faces=faces,
-        rolls=rolls,
-        selected=selected if selected else rolls,
-        dropped=dropped,
-        modifier=mod,
-        subtotal=subtotal,
-        total=total,
-        detail=detail,
-    )
+def roll(expr: str) -> Result:
+    """
+    Roll a composite dice expression like:
+      '1d20+5', '2d8+1d4+3', '4d6kh3', '1d20-1', 'd20+2'
+    Returns Result(total, detail).
+    """
+    terms = _parse_terms(expr)
+    pieces = []
+    running_total = 0
 
-# ---------- d20 helpers ----------
+    for kind, sign, a, b, keep in terms:
+        if kind == "const":
+            val = sign * a
+            running_total += val
+            pieces.append(f"{'+' if sign>0 else '-'}{abs(a)}")
+        else:
+            count, sides = a, b
+            rolls = [_roll_one_die(sides) for _ in range(count)]
+            kept, dropped = _apply_keep(rolls, keep)
+            subtotal = sum(kept if keep else rolls)
+            subtotal *= sign
 
-def roll_adv(modifier: int = 0, rng: random.Random | None = None) -> RollResult:
-    """1d20 with advantage; returns the kept die + modifier."""
-    r = rng or random
-    r1, r2 = r.randint(1, 20), r.randint(1, 20)
-    kept = max(r1, r2)
-    total = kept + modifier
-    detail = f"1d20 adv: [{r1}, {r2}] -> keep {kept}{modifier:+d} = {total}"
-    return RollResult(
-        expr=f"1d20 (adv){modifier:+d}" if modifier else "1d20 (adv)",
-        n=2, faces=20,
-        rolls=[r1, r2],
-        selected=[kept],
-        dropped=[min(r1, r2)],
-        modifier=modifier,
-        subtotal=kept,
-        total=total,
-        detail=detail,
-    )
+            # Build detail
+            if keep:
+                kept_str = ",".join(str(x) for x in kept) if kept else ""
+                drop_str = ",".join(str(x) for x in dropped) if dropped else ""
+                roll_str = f"[{kept_str}]" + (f"~[{drop_str}]" if drop_str else "")
+            else:
+                roll_str = "[" + ",".join(str(x) for x in rolls) + "]"
 
-def roll_dis(modifier: int = 0, rng: random.Random | None = None) -> RollResult:
-    """1d20 with disadvantage; returns the kept die + modifier."""
-    r = rng or random
-    r1, r2 = r.randint(1, 20), r.randint(1, 20)
-    kept = min(r1, r2)
-    total = kept + modifier
-    detail = f"1d20 dis: [{r1}, {r2}] -> keep {kept}{modifier:+d} = {total}"
-    return RollResult(
-        expr=f"1d20 (dis){modifier:+d}" if modifier else "1d20 (dis)",
-        n=2, faces=20,
-        rolls=[r1, r2],
-        selected=[kept],
-        dropped=[max(r1, r2)],
-        modifier=modifier,
-        subtotal=kept,
-        total=total,
-        detail=detail,
-    )
+            op = "+" if sign > 0 else "-"
+            term_str = f"{op}{count}d{sides}{keep or ''}{roll_str}"
+            pieces.append(term_str)
+
+            running_total += subtotal
+
+    # Clean up leading '+' in detail
+    detail = "".join(pieces)
+    if detail.startswith("+"):
+        detail = detail[1:]
+    return Result(total=running_total, detail=detail)
+
+def roll_adv(expr: str) -> Result:
+    """Roll the entire expression twice and keep the higher total."""
+    r1 = roll(expr)
+    r2 = roll(expr)
+    winner = r1 if r1.total >= r2.total else r2
+    detail = f"adv({expr}): [{r1.detail}] vs [{r2.detail}] -> {winner.total}"
+    return Result(total=winner.total, detail=detail)
+
+def roll_dis(expr: str) -> Result:
+    """Roll the entire expression twice and keep the lower total."""
+    r1 = roll(expr)
+    r2 = roll(expr)
+    loser = r1 if r1.total <= r2.total else r2
+    detail = f"dis({expr}): [{r1.detail}] vs [{r2.detail}] -> {loser.total}"
+    return Result(total=loser.total, detail=detail)
