@@ -11,13 +11,11 @@ Local Jupyter-based development environment for **Iron Wolf Trading Company** to
 - Record session logs and export summaries.
 
 ### Structure
-iwtc-lab/
+iwtc-tools/
 │
-├── assets/ # images, tokens, maps (not tracked by git)
-├── data/ # YAML/JSON for monsters, NPCs, encounters
+├── data/ # YAML/JSON for SRD and sample data
 ├── lib/ # Python utility modules
 ├── notebooks/ # active Jupyter notebooks
-├── sessions/ # exported combat logs and session notes
 └── README.md
 
 
@@ -26,7 +24,7 @@ iwtc-lab/
 - JupyterLab 4.x
 - Optional virtualenv: `~/venvs/iwtc`
 
-For full setup instructions, see `notebooks/IWTC_Lab_Setup.ipynb`.
+For full setup instructions, see `notebooks/IWTC_Tools_Setup.ipynb`.
 
 Quick start:
 ```bash
@@ -41,13 +39,13 @@ Launch command:
 
 
 ### Data policy
-- `data/homebrew/` — YAML; editable; saved by IWTC-Lab tools.
+- `data/homebrew/` — YAML; editable; saved by IWTC-Tools.
 - `data/srd/` and `data/licensed/` — JSON; read-only; never modified by tools.
 - All data are normalized in-memory to `statblock.v1` before use.
 
 
 ### Credits
-Development and documentation assisted by ChatGPT (OpenAI GPT-5) as a collaborative coding partner.
+Development and documentation assisted by ChatGPT (OpenAI GPT-5.2) as a collaborative coding partner.
 
 
 ### Licensing
