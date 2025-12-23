@@ -40,7 +40,8 @@ jupyter lab
 
 Launch command:
 ```bash
-/usr/local/opt/python@3.11/bin/python3.11 -W ignore -m jupyter lab```
+/usr/local/opt/python@3.11/bin/python3.11 -W ignore -m jupyter lab
+```
 
 
 ### Data policy
