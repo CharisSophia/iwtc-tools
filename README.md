@@ -1,6 +1,8 @@
-# IWTC Lab
+# IWTC Tools
 
 Local Jupyter-based development environment for **Iron Wolf Trading Company** tools.
+
+See `notes/TODO.md` for current development tasks.
 
 > **Note:** Initial environment scaffolding and documentation produced collaboratively with ChatGPT (OpenAI GPT-5).
 
@@ -23,6 +25,8 @@ iwtc-tools/
 - Python 3.11
 - JupyterLab 4.x
 - Local virtual environment (`.venv`)
+
+All notebooks should use the "Python (iwtc-tools)" kernel.
 
 For full setup instructions, see `notebooks/IWTC_Tools_Setup.ipynb`.
 
