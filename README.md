@@ -26,6 +26,7 @@ iwtc-tools/
 
 For full setup instructions, see `notebooks/IWTC_Tools_Setup.ipynb`.
 
+
 #### Quick start
 
 ```bash
@@ -34,7 +35,7 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install jupyterlab ipykernel
 python -m ipykernel install --user --name iwtc-tools --display-name "Python (iwtc-tools)"
-jupyter lab```
+jupyter lab
 
 Launch command:
 ```bash
