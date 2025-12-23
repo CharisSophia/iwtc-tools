@@ -20,18 +20,21 @@ iwtc-tools/
 
 
 ### Environment
-- Python 3.11 (Homebrew)
+- Python 3.11
 - JupyterLab 4.x
-- Optional virtualenv: `~/venvs/iwtc`
+- Local virtual environment (`.venv`)
 
 For full setup instructions, see `notebooks/IWTC_Tools_Setup.ipynb`.
 
-Quick start:
+#### Quick start
+
 ```bash
-/usr/local/opt/python@3.11/bin/python3.11 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-python -m jupyter lab
+python -m pip install --upgrade pip
+python -m pip install jupyterlab ipykernel
+python -m ipykernel install --user --name iwtc-tools --display-name "Python (iwtc-tools)"
+jupyter lab```
 
 Launch command:
 ```bash
@@ -57,5 +60,5 @@ made available under the **Open Game License v1.0a**.
 A full copy of the license is included in this repository as [LICENSE_OGL.pdf](LICENSE_OGL.pdf).
 
 All SRD content is © Wizards of the Coast and used under OGL v1.0a.  
-All original IWTC-Lab code and homebrew material © 2025 Charis Sophia.
+All original IWTC-Tools code and homebrew material © 2025 CharisSophia.
 
