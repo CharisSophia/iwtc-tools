@@ -1,0 +1,59 @@
+# Example world_repository.yml
+#
+# This file is an example of a minimal world repository descriptor.
+# It is provided for reference and is not used directly by the tools.
+#
+# Typical usage:
+# - Copy this file into your world repository (commonly under _meta/descriptors/)
+# - Edit the values (especially world_root) to match your local setup
+#
+# The exact location of the active descriptor file is up to the user and
+# is supplied to tools explicitly as a parameter.
+#
+
+# This file describes how a world's accumulated materials are organized.
+# This includes where source materials are stored, where machine-generated
+# work-in-progress outputs may be written, and which world descriptors apply.
+#
+# This file describes the structure of the world repository itself.
+# It does not describe world lore, geography, or canon.
+#
+
+# ---------------------
+# Minimum required info:
+# - where does everything start?
+# - what should be read?
+# - where can output be written?
+# ---------------------
+
+# Absolute path to the root of the world's file structure.
+# This directory contains all world content, metadata, and local working files.
+# Paths in this file are resolved relative to this root.
+# Example (macOS):
+#   /Users/yourname/Documents/Campaign Directory
+# Example (Windows):
+#   C:\Users\yourname\Documents\Campaign Directory
+world_root: /absolute/path/to/your/world/root
+
+sources:
+  # Where tools are allowed to read source materials from.
+  # Multiple entries are allowed.
+  # Relative paths are resolved under world_root unless an absolute path is given.
+  read_paths:
+    - _local/session_notes
+    - _local/pbp
+    - _local/transcripts
+    - _local/planning
+    - _local/recollections
+
+working_drafts:
+  # Location for machine-generated working drafts.
+  # These files are provisional, reproducible, and safe to delete.
+  # This directory is expected to be ignored by version control.
+  #
+  # Relative paths are resolved under world_root unless an absolute path is given.
+  path: _local/machine_wip
+
+# ---------------------
+# Optional additional info
+# ---------------------
