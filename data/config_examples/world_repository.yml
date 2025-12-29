@@ -40,11 +40,11 @@ sources:
   # Multiple entries are allowed.
   # Relative paths are resolved under world_root unless an absolute path is given.
   read_paths:
-    - _local/session_notes
-    - _local/pbp
-    - _local/transcripts
-    - _local/planning
+    - _local/auto_transcripts
+    - _local/pbp_transcripts
+    - _local/planning_notes
     - _local/recollections
+    - _local/session_notes
 
 working_drafts:
   # Location for machine-generated working drafts.
