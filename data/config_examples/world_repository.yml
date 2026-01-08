@@ -39,12 +39,31 @@ sources:
   # Where tools are allowed to read source materials from.
   # Multiple entries are allowed.
   # Relative paths are resolved under world_root unless an absolute path is given.
+  #
+  # The optional "type" field is a human-defined classification used to guide
+  # chunking and indexing behavior. It is not inferred automatically.
+  #
+  # Common values include (but are not limited to):
+  #   - auto_transcripts    : raw text transcripts from recorded sessions
+  #   - pbp_transcripts     : play-by-post transcripts (e.g., Discord exports)
+  #   - session_notes       : human-authored session notes
+  #   - planning_notes      : planning or prep documents
+  #   - recollections       : retrospective or reflective notes
+  #
+  # If no type is provided, the source will be treated as untyped and
+  # default, format-based chunking rules will be applied.
   read_paths:
-    - _local/auto_transcripts
-    - _local/pbp_transcripts
-    - _local/planning_notes
+    - path: _local/auto_transcripts
+      type: auto_transcripts
+    - path: _local/pbp_transcripts
+      type: pbp_transcripts
+    - path: _local/session_notes
+      type: session_notes
+    - path: _local/planning_notes
+      type: planning_notes
+
+    # Backward-compatible untyped entry:
     - _local/recollections
-    - _local/session_notes
 
 working_drafts:
   # Location for machine-generated working drafts.
