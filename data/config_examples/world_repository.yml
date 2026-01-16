@@ -74,5 +74,26 @@ working_drafts:
   path: _local/machine_wip
 
 # ---------------------
-# Optional additional info
+# Optional vocabulary resources
 # ---------------------
+
+# Vocabulary files provide an authoritative registry of known names and aliases
+# used for entity linking and reference indexing.
+#
+# These files are NOT required for discovery, normalization, or chunking.
+# They are required for later phases that link known entities back to the source text.
+#
+# All paths are resolved relative to world_root unless absolute paths are given.
+#
+# Typical workflow:
+# - vocab_entities.csv defines canonical entity names and IDs
+# - vocab_aliases.csv defines alternate spellings, nicknames, and shorthand forms
+# - vocab_map_player_character.csv maps players to the characters they portray
+#
+# These files are human-curated and version-controlled.
+# Tools will never modify them automatically.
+
+vocabulary:
+  entities: _meta/indexes/vocab_entities.csv
+  aliases: _meta/indexes/vocab_aliases.csv
+  player_character_map: _meta/indexes/vocab_map_player_character.csv
