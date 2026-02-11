@@ -73,6 +73,11 @@ working_drafts:
   # Relative paths are resolved under world_root unless an absolute path is given.
   path: _local/machine_wip
 
+indexes:
+  # Location for machine-usable indexes
+  # Relative paths are resolved under world_root unless absolute.
+  path: _meta/indexes
+
 # ---------------------
 # Optional vocabulary resources
 # ---------------------
