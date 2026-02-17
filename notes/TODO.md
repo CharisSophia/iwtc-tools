@@ -1,79 +1,98 @@
-# IWTC – Working To-Do Queue
+# IWTC Tools – TODO & Roadmap
 
-This is the active, unblocked task list across **iwtc-tools**, **iwtc-world**, and **bryncross-world**.
+This file tracks structural and architectural work for the IWTC toolchain.
 
----
-
-## Repository Hygiene & Baseline
-
-- Add / finalize README.md for `iwtc-world`
-- Add `.gitkeep` (or README stubs) for `_meta/indexes/` and `_meta/docs/`
-- Sanity-check `.gitignore` in all three repos
-- Commit world repo structural baseline
-- Commit tools repo config skeleton
+It is organized into:
+- Active Work (in progress or next focus)
+- V1 Enhancements (intentional future improvements)
+- Longer-Term Architecture
+- Completed Milestones (historical record)
 
 ---
 
-## Tool Configuration
+# Active Work
 
-- Create `configs/worlds/example.yaml` in `iwtc-tools`
-- Create local (untracked) `configs/worlds/iwtc.yaml`
-- Create local (untracked) `configs/worlds/bryncross.yaml`
-- Decide naming / placement for index outputs
+## Graph Modeling (V0)
 
----
+Goal: Export a clean graph representation from existing indexes (CSV only).
 
-## Environment and Notebook Maintenance
-
-- Set up / rebuild the `iwtc-tools` virtual environment (`.venv`)
-- Ensure JupyterLab and `ipykernel` are installed in the venv
-- Register a stable Jupyter kernel for `iwtc-tools`
-  - e.g. “IWTC Tools (py3.11)”
-- Refactor existing notebooks to reflect the repo rename  
-  (`iwtc-lab` → `iwtc-tools`)
-- Refactor notebooks to support multi-world configuration
-- Update `IWTC_Tools_Setup.ipynb` to include:
-  - `jq` installation via Homebrew
-  - `jq --version` verification
-  - (optional) example JSON sanity check
+- [ ] Define node export schema (entity, chunk, file)
+- [ ] Define edge export schema (entity→chunk, chunk→file, etc.)
+- [ ] Build IWTC_Graph_Indexing.ipynb (bootstrap notebook)
+- [ ] Export graph_nodes_v0.csv
+- [ ] Export graph_edges_v0.csv
+- [ ] Validate graph integrity (counts, no orphan edges)
 
 ---
 
-## Indexing Design (Evidence-First)
+# V1 Enhancements Backlog
 
-- Decide first indexable folders in `iwtc-world`
-- Define initial evidence document index JSON schema
-- Complete PbP transcript entries in `document_index.json`
-- First manual indexing dry run (read-only, no writes)
-- Begin raw session notes indexing
-  - apply “session × storyline = document” rule
+These are intentionally deferred until V0 is stable.
 
----
+## Context Enrichment
 
-## Architecture & Documentation
+- [ ] Parse Markdown headers to capture session titles
+- [ ] Capture location/section context per chunk
+- [ ] Attach session number and/or date metadata
+- [ ] Capture PbP timestamps where available
+- [ ] Handle ambiguous vocabulary with could_refer_to
 
-- Add minimal `ARCHITECTURE.md` to `iwtc-tools`
-- Document evidence-first indexing philosophy
-- Document document-unit rules (link to Document Units v1)
+## Temporal Modeling
 
----
+- [ ] Add ordering metadata (session sequence)
+- [ ] Add time-aware graph modeling
+- [ ] Support “state at time T” queries
 
-## World Structure Rationalization
+## Knowledge Modeling
 
-- Rationalize world directory structures
-  - Define IWTC as the structural standard
-  - Map Bryncross’s medieval-themed names onto that standard
-  - Account for Bryncross-specific content:
-    - PC / NPC character records
-    - Homebrewed monster statblocks
-    - Fully built location data
-  - Decide where flavor naming lives:
-    - folder names vs metadata / aliases
+- [ ] Model "who could know X at time Y"
+- [ ] Model player vs character knowledge separation
+- [ ] Explore belief-state modeling for major reveals
 
 ---
 
-## Notes
+# Architecture & Documentation
 
-- Bryncross = best-case dataset (clean PbP, early structure)
-- IWTC = worst-case dataset (long-running, messy capture)
-- Tooling must work for both
+- [ ] Create ARCHITECTURE.md (high-level system diagram)
+- [ ] Document indexing philosophy (evidence-first model)
+- [ ] Document graph design philosophy (node/edge semantics)
+
+---
+
+# Repository Hygiene
+
+- [ ] Add minimal README for each repo
+- [ ] Standardize descriptor documentation
+- [ ] Clean up legacy world structure assumptions
+
+---
+
+# Completed Milestones
+
+## Environment & Setup
+
+- [x] Rebuilt iwtc-tools virtual environment
+- [x] Installed Jupyter + ipykernel in venv
+- [x] Registered stable kernel
+- [x] Refactored notebooks for multi-world configuration
+- [x] Standardized descriptor-driven paths
+
+## Evidence-First Indexing (V0)
+
+- [x] Defined document index schema
+- [x] Completed PbP transcript indexing
+- [x] Indexed session notes
+- [x] Generated:
+  - index_chunk_to_entities_v0.csv
+  - index_entity_to_chunks_v0.csv
+  - index_player_to_chunks_v0.csv
+  - index_source_files_v0.csv
+- [x] Built IWTC_Index_Query_V0.ipynb
+
+---
+
+# Guiding Principle
+
+V0 focuses on structural clarity and reproducibility.
+
+V1 adds semantic richness only after structural stability is proven.
