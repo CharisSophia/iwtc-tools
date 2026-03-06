@@ -25,6 +25,21 @@ Goal: Export a clean graph representation from existing indexes (CSV only).
 
 ---
 
+## Known Issues and Data Debt (log as discovered)
+
+This section is for problems noticed during graph/query work that do not block V0 progress, but must be tracked so they do not get lost.
+
+### Vocabulary coverage gaps
+- [ ] Missing node records in vocab files cause graph nodes with empty attrs (example: person_anthony; player_amy; player_ana; player_delta; player_kaci).
+
+### Graph integrity quirks
+- [ ] MultiDiGraph multiplicity: clarify whether parallel edges ever exist in exports, or if edges are always aggregated.
+
+### Evidence usability gaps
+- [ ] Chunk nodes do not yet carry snippet-addressable metadata (e.g., relpath + start_line/end_line OR chunk_text). Needed for DM-friendly evidence outputs in Q2+.
+
+---
+
 # V1 Enhancements Backlog
 
 These are intentionally deferred until V0 is stable.
