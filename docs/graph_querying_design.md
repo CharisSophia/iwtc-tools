@@ -9,6 +9,9 @@ The corresponding execution notebook is:
 
 This document is the conceptual contract for how grammatical edge statements are composed to support DM-driven exploration of indexed world structure. The notebook implements this design.
 
+For an overview of how this workflow fits into the broader indexing system, see:
+
+- `docs/indexing_system_overview.md`
 
 ---
 

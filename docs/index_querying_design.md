@@ -8,6 +8,10 @@ The corresponding execution notebook is:
 
 Readers should treat this document as the authoritative description of how querying operates over existing index artifacts. The notebook implements this design.
 
+For an overview of how this workflow fits into the broader indexing system, see:
+
+- `docs/indexing_system_overview.md`
+
 ---
 
 ## Purpose and scope
