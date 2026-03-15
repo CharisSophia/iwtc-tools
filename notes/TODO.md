@@ -10,32 +10,65 @@ It is organized into:
 
 ---
 
-# Active Work
-
-## Graph Modeling (V0)
-
-Goal: Export a clean graph representation from existing indexes (CSV only).
-
-- [ ] Define node export schema (entity, chunk, file)
-- [ ] Define edge export schema (entity→chunk, chunk→file, etc.)
-- [ ] Build IWTC_Graph_Indexing.ipynb (bootstrap notebook)
-- [ ] Export graph_nodes_v0.csv
-- [ ] Export graph_edges_v0.csv
-- [ ] Validate graph integrity (counts, no orphan edges)
+Current system state: V0 indexing complete, graph and semantic layers operational.
 
 ---
 
-## Known Issues and Data Debt (log as discovered)
+# System Roadmap
+
+Current phase: Graph exploration and evidence usability.
+
+Next system capabilities:
+
+- Investigation workflows built on graph traversal
+- Evidence surfacing from graph queries
+- Improved context metadata for chunks
+
+Later roadmap:
+
+- Temporal modeling
+- Knowledge-state modeling
+- Narrative reveal modeling
+
+---
+
+# Active Engineering Work
+
+## Graph Query Layer
+
+Goal: make graph artifacts usable for discovery and investigation.
+
+- [ ] Expand IWTC_Graph_Querying.ipynb
+- [ ] Implement traversal helpers
+- [ ] Validate traversal correctness
+
+### Investigation Workflows
+
+Goal: support DM-style investigation queries that return explainable evidence chains.
+
+- [ ] Implement path explanation queries
+- [ ] Return supporting chunk/file evidence for graph traversals
+- [ ] Prototype investigation-style queries (entity → evidence → session)
+
+## Evidence Surface Improvements
+
+- [ ] Add snippet-addressable metadata to chunk nodes
+- [ ] Add relpath + line offsets to chunk exports
+- [ ] Enable direct evidence display from queries
+
+---
+
+# Known Issues and Data Debt (log as discovered)
 
 This section is for problems noticed during graph/query work that do not block V0 progress, but must be tracked so they do not get lost.
 
-### Vocabulary coverage gaps
-- [ ] Missing node records in vocab files cause graph nodes with empty attrs (example: person_anthony; player_amy; player_ana; player_delta; player_kaci).
+## Vocabulary coverage gaps
+- [ ] Missing node records in vocab files cause graph nodes with empty attrs (example: player_amy; player_ana; player_delta; player_kaci).
 
-### Graph integrity quirks
+## Graph integrity quirks
 - [ ] MultiDiGraph multiplicity: clarify whether parallel edges ever exist in exports, or if edges are always aggregated.
 
-### Evidence usability gaps
+## Evidence usability gaps
 - [ ] Chunk nodes do not yet carry snippet-addressable metadata (e.g., relpath + start_line/end_line OR chunk_text). Needed for DM-friendly evidence outputs in Q2+.
 
 ---
@@ -68,9 +101,10 @@ These are intentionally deferred until V0 is stable.
 
 # Architecture & Documentation
 
-- [ ] Create ARCHITECTURE.md (high-level system diagram)
+- [x] Create indexing_system_overview.md
 - [ ] Document indexing philosophy (evidence-first model)
 - [ ] Document graph design philosophy (node/edge semantics)
+- [x] Cross-link design documents to system overview
 
 ---
 
@@ -103,6 +137,23 @@ These are intentionally deferred until V0 is stable.
   - index_player_to_chunks_v0.csv
   - index_source_files_v0.csv
 - [x] Built IWTC_Index_Query_V0.ipynb
+
+## Graph Indexing (V0)
+
+- [x] Designed graph node schema
+- [x] Designed graph edge schema
+- [x] Built IWTC_Graph_Indexing.ipynb
+- [x] Exported graph_nodes_v0.csv
+- [x] Exported graph_edges_v0.csv
+- [x] Validated graph integrity
+
+## Semantic Indexing (V0)
+
+- [x] Defined semantic relationship model
+- [x] Built IWTC_Semantic_Indexing.ipynb
+- [x] Exported graph_semantic_nodes_v0.csv
+- [x] Exported graph_semantic_edges_v0.csv
+- [x] Verified semantic graph integrity
 
 ---
 
