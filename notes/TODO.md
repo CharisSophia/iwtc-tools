@@ -16,13 +16,13 @@ Current system state: V0 indexing complete, graph and semantic layers operationa
 
 # System Roadmap
 
-Current phase: Graph exploration and evidence usability.
+Current phase: Structural semantics complete; preparing narrative semantics.
 
 Next system capabilities:
 
-- Investigation workflows built on graph traversal
+- Narrative semantics (path → explanation)
+- Investigation workflows built on semantic paths
 - Evidence surfacing from graph queries
-- Improved context metadata for chunks
 
 Later roadmap:
 
@@ -34,13 +34,28 @@ Later roadmap:
 
 # Active Engineering Work
 
-## Graph Query Layer
+## Incremental Rebuild Tooling
 
-Goal: make graph artifacts usable for discovery and investigation.
+Goal: enable fast, selective rebuilds of indexes and graphs during active modeling.
 
-- [ ] Expand IWTC_Graph_Querying.ipynb
-- [ ] Implement traversal helpers
-- [ ] Validate traversal correctness
+- [ ] Create IWTC_Rebuild.ipynb (incremental rebuild notebook)
+- [ ] Write directly to indexes.path outputs
+- [ ] Implement change flags:
+  - sources
+  - entities
+  - aliases
+  - relationships
+  - predicates
+- [ ] Rebuild semantic graph independently of evidence graph
+- [ ] Rebuild evidence graph independently of raw indexing
+- [ ] Define dependency rules between artifacts
+- [ ] Add rebuild logging / visibility (what was rebuilt and why)
+
+Notes:
+- This replaces repeated full bootstrapping during modeling iterations
+- Designed for rapid iteration during semantic and narrative phases
+
+---
 
 ### Investigation Workflows
 
@@ -49,6 +64,8 @@ Goal: support DM-style investigation queries that return explainable evidence ch
 - [ ] Implement path explanation queries
 - [ ] Return supporting chunk/file evidence for graph traversals
 - [ ] Prototype investigation-style queries (entity → evidence → session)
+
+---
 
 ## Evidence Surface Improvements
 
@@ -62,11 +79,14 @@ Goal: support DM-style investigation queries that return explainable evidence ch
 
 This section is for problems noticed during graph/query work that do not block V0 progress, but must be tracked so they do not get lost.
 
-## Vocabulary coverage gaps
-- [ ] Missing node records in vocab files cause graph nodes with empty attrs (example: player_amy; player_ana; player_delta; player_kaci).
+## Relationship coverage gaps
+- [ ] Missing semantic relationships lead to incomplete or suboptimal path discovery (e.g., Victor ↔ Evaine).
+- [ ] Some entities rely on indirect or structural paths due to absent direct or narrative relationships.
+- [ ] Relationship modeling is currently structural; narrative-level connections are not yet represented.
 
-## Graph integrity quirks
-- [ ] MultiDiGraph multiplicity: clarify whether parallel edges ever exist in exports, or if edges are always aggregated.
+## Structural modeling limits
+- [ ] Organizational and role modeling may still be incomplete or uneven across factions.
+- [ ] Some relationship types (e.g., narrative events, shared history) are not yet represented.
 
 ## Evidence usability gaps
 - [ ] Chunk nodes do not yet carry snippet-addressable metadata (e.g., relpath + start_line/end_line OR chunk_text). Needed for DM-friendly evidence outputs in Q2+.
@@ -101,10 +121,10 @@ These are intentionally deferred until V0 is stable.
 
 # Architecture & Documentation
 
-- [x] Create indexing_system_overview.md
+- [x] Create indexing_system_overview.md (v0.6)
 - [ ] Document indexing philosophy (evidence-first model)
 - [ ] Document graph design philosophy (node/edge semantics)
-- [x] Cross-link design documents to system overview
+- [x] Cross-link design documents to system overview (v0.6)
 
 ---
 
@@ -149,11 +169,33 @@ These are intentionally deferred until V0 is stable.
 
 ## Semantic Indexing (V0)
 
-- [x] Defined semantic relationship model
-- [x] Built IWTC_Semantic_Indexing.ipynb
-- [x] Exported graph_semantic_nodes_v0.csv
-- [x] Exported graph_semantic_edges_v0.csv
-- [x] Verified semantic graph integrity
+- [x] Defined semantic relationship model (v0.6)
+- [x] Built IWTC_Semantic_Indexing.ipynb (v0.6)
+- [x] Exported graph_semantic_nodes_v0.csv (v0.6)
+- [x] Exported graph_semantic_edges_v0.csv (v0.6)
+- [x] Verified semantic graph integrity (v0.6)
+
+## Structural Semantics (V0.7)
+
+- [x] Integrated world_relationships into semantic graph (v0.7)
+- [x] Implemented predicate system (reverse, class, cost) (v0.7)
+- [x] Built path-based semantic querying (Q4) (v0.7)
+- [x] Implemented cost-based path ranking (v0.7)
+- [x] Added structural penalties (kinship, historical) (v0.7)
+- [x] Modeled organizational structures (offices, roles, hierarchy) (v0.7)
+- [x] Validated structural semantic behavior across scenarios (v0.7)
+
+## Graph Query Layer
+
+Goal: make graph artifacts usable for discovery and investigation.
+
+- [x] Expand IWTC_Graph_Querying.ipynb (v0.7)
+- [x] Validate traversal correctness (v0.7)
+
+Notes:
+- Traversal logic is currently embedded in Q4
+- Helper functions will be extracted later if needed
+
 
 ---
 
