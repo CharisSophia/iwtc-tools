@@ -10,7 +10,7 @@ It is organized into:
 
 ---
 
-Current system state: V0 indexing complete, graph and semantic layers operational.
+Current system state: V0 indexing complete, graph and semantic layers operational. Incremental rebuild pipeline is operational for canonical indexes and graphs.
 
 ---
 
@@ -20,7 +20,7 @@ Current phase: Structural semantics complete; preparing narrative semantics.
 
 Next system capabilities:
 
-- Narrative semantics (path → explanation)
+- Narrative semantics (path -> explanation)
 - Investigation workflows built on semantic paths
 - Evidence surfacing from graph queries
 
@@ -34,26 +34,22 @@ Later roadmap:
 
 # Active Engineering Work
 
-## Incremental Rebuild Tooling
+## Narrative Semantics Bootstrap
 
-Goal: enable fast, selective rebuilds of indexes and graphs during active modeling.
+Goal: begin modeling narrative structure beyond structural world relationships.
 
-- [ ] Create IWTC_Rebuild.ipynb (incremental rebuild notebook)
-- [ ] Write directly to indexes.path outputs
-- [ ] Implement change flags:
-  - sources
-  - entities
-  - aliases
-  - relationships
-  - predicates
-- [ ] Rebuild semantic graph independently of evidence graph
-- [ ] Rebuild evidence graph independently of raw indexing
-- [ ] Define dependency rules between artifacts
-- [ ] Add rebuild logging / visibility (what was rebuilt and why)
+- [ ] Define first-pass narrative semantics scope
+- [ ] Decide canonical artifact(s) for narrative semantics
+- [ ] Parse session note headers for scene/date/location context
+- [ ] Propagate header-derived context into chunk-level metadata
+- [ ] Identify event-bearing chunk candidates
+- [ ] Define minimal event / scene classification scheme
+- [ ] Determine how narrative semantics should relate to evidence vs semantic graph layers
 
 Notes:
-- This replaces repeated full bootstrapping during modeling iterations
-- Designed for rapid iteration during semantic and narrative phases
+- Start with session notes first; they carry the strongest explicit scene metadata
+- Focus on date/location/scene context before richer event interpretation
+- Do not yet attempt full narrative relationship modeling
 
 ---
 
@@ -63,7 +59,7 @@ Goal: support DM-style investigation queries that return explainable evidence ch
 
 - [ ] Implement path explanation queries
 - [ ] Return supporting chunk/file evidence for graph traversals
-- [ ] Prototype investigation-style queries (entity → evidence → session)
+- [ ] Prototype investigation-style queries (entity -> evidence -> session)
 
 ---
 
@@ -80,7 +76,7 @@ Goal: support DM-style investigation queries that return explainable evidence ch
 This section is for problems noticed during graph/query work that do not block V0 progress, but must be tracked so they do not get lost.
 
 ## Relationship coverage gaps
-- [ ] Missing semantic relationships lead to incomplete or suboptimal path discovery (e.g., Victor ↔ Evaine).
+- [ ] Missing semantic relationships lead to incomplete or suboptimal path discovery (e.g., Victor <-> Evaine).
 - [ ] Some entities rely on indirect or structural paths due to absent direct or narrative relationships.
 - [ ] Relationship modeling is currently structural; narrative-level connections are not yet represented.
 
@@ -109,7 +105,7 @@ These are intentionally deferred until V0 is stable.
 
 - [ ] Add ordering metadata (session sequence)
 - [ ] Add time-aware graph modeling
-- [ ] Support “state at time T” queries
+- [ ] Support "state at time T" queries
 
 ## Knowledge Modeling
 
@@ -121,10 +117,11 @@ These are intentionally deferred until V0 is stable.
 
 # Architecture & Documentation
 
-- [x] Create indexing_system_overview.md (v0.6)
+- [x] Create `indexing_system_overview.md` (v0.6)
 - [ ] Document indexing philosophy (evidence-first model)
 - [ ] Document graph design philosophy (node/edge semantics)
 - [x] Cross-link design documents to system overview (v0.6)
+- [ ] Document incremental rebuild notebook usage and phase contracts
 
 ---
 
@@ -140,7 +137,7 @@ These are intentionally deferred until V0 is stable.
 
 ## Environment & Setup
 
-- [x] Rebuilt iwtc-tools virtual environment
+- [x] Rebuilt `iwtc-tools` virtual environment
 - [x] Installed Jupyter + ipykernel in venv
 - [x] Registered stable kernel
 - [x] Refactored notebooks for multi-world configuration
@@ -152,32 +149,32 @@ These are intentionally deferred until V0 is stable.
 - [x] Completed PbP transcript indexing
 - [x] Indexed session notes
 - [x] Generated:
-  - index_chunk_to_entities_v0.csv
-  - index_entity_to_chunks_v0.csv
-  - index_player_to_chunks_v0.csv
-  - index_source_files_v0.csv
-- [x] Built IWTC_Index_Query_V0.ipynb
+  - `index_chunk_to_entities_v0.csv`
+  - `index_entity_to_chunks_v0.csv`
+  - `index_player_to_chunks_v0.csv`
+  - `index_source_files_v0.csv`
+- [x] Built `IWTC_Index_Query_V0.ipynb`
 
 ## Graph Indexing (V0)
 
 - [x] Designed graph node schema
 - [x] Designed graph edge schema
-- [x] Built IWTC_Graph_Indexing.ipynb
-- [x] Exported graph_nodes_v0.csv
-- [x] Exported graph_edges_v0.csv
+- [x] Built `IWTC_Graph_Indexing.ipynb`
+- [x] Exported `graph_nodes_v0.csv`
+- [x] Exported `graph_edges_v0.csv`
 - [x] Validated graph integrity
 
 ## Semantic Indexing (V0)
 
 - [x] Defined semantic relationship model (v0.6)
-- [x] Built IWTC_Semantic_Indexing.ipynb (v0.6)
-- [x] Exported graph_semantic_nodes_v0.csv (v0.6)
-- [x] Exported graph_semantic_edges_v0.csv (v0.6)
+- [x] Built `IWTC_Semantic_Indexing.ipynb` (v0.6)
+- [x] Exported `graph_semantic_nodes_v0.csv` (v0.6)
+- [x] Exported `graph_semantic_edges_v0.csv` (v0.6)
 - [x] Verified semantic graph integrity (v0.6)
 
 ## Structural Semantics (V0.7)
 
-- [x] Integrated world_relationships into semantic graph (v0.7)
+- [x] Integrated `world_relationships` into semantic graph (v0.7)
 - [x] Implemented predicate system (reverse, class, cost) (v0.7)
 - [x] Built path-based semantic querying (Q4) (v0.7)
 - [x] Implemented cost-based path ranking (v0.7)
@@ -189,13 +186,32 @@ These are intentionally deferred until V0 is stable.
 
 Goal: make graph artifacts usable for discovery and investigation.
 
-- [x] Expand IWTC_Graph_Querying.ipynb (v0.7)
+- [x] Expand `IWTC_Graph_Querying.ipynb` (v0.7)
 - [x] Validate traversal correctness (v0.7)
 
 Notes:
 - Traversal logic is currently embedded in Q4
 - Helper functions will be extracted later if needed
 
+## Incremental Rebuild Pipeline
+
+- [x] Build `IWTC_Incremental_Rebuild.ipynb`
+- [x] Implement descriptor/path resolution for canonical rebuilds
+- [x] Implement timestamp-based change detection
+- [x] Load and normalize canonical vocabulary tables
+- [x] Add basic vocabulary consistency validation
+- [x] Build canonical vocabulary lookup for entity linking
+- [x] Rebuild source-derived indexes:
+  - `index_source_files_v0.csv`
+  - `index_chunk_to_entities_v0.csv`
+  - `index_entity_to_chunks_v0.csv`
+- [x] Rebuild evidence graph outputs:
+  - `graph_evidence_nodes_v0.csv`
+  - `graph_evidence_edges_v0.csv`
+- [x] Rebuild semantic graph outputs:
+  - `graph_semantic_nodes_v0.csv`
+  - `graph_semantic_edges_v0.csv`
+- [x] Standardize phase boundaries, logging, and cleanup behavior
 
 ---
 
