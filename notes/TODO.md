@@ -87,6 +87,10 @@ This section is for problems noticed during graph/query work that do not block V
 ## Evidence usability gaps
 - [ ] Chunk nodes do not yet carry snippet-addressable metadata (e.g., relpath + start_line/end_line OR chunk_text). Needed for DM-friendly evidence outputs in Q2+.
 
+## Incremental index updates
+- [ ] Create a mapping to translate non-algorithmic indexes between chunk versions.
+- [ ] Reformat Kavar notes, rechunk to new index version, map narrative index to new chunk ids.
+
 ---
 
 # V1 Enhancements Backlog
